@@ -2,6 +2,19 @@ import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { useDropzone } from "react-dropzone";
 import callApi from "../api";
+import {
+  Modal,
+  Box,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Checkbox,
+  Button,
+  LinearProgress,
+} from "@mui/material";
+import ExcelUploadComponent from "./InputData";
 interface Ingredient {
   name: string;
   percentage: number;
@@ -19,56 +32,16 @@ interface Result {
 }
 
 const ExcelReader: React.FC = () => {
-  const [rawData, setRawData] = useState<Ingredient[]>([]);
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
-  const [searchBy, setSearchBy] = useState<"name" | "cas" | "all">("all");
-  const handleFileUpload = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const binaryStr = event.target?.result as string;
-      const workbook = XLSX.read(binaryStr, { type: "binary" });
-
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-
-      const jsonData: any[] = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-      const headerIndex = jsonData.findIndex(
-        (row) =>
-          row[0]?.trim().toLowerCase() === "INGREDIENT  NAME".toLowerCase()
-      );
-      if (headerIndex === -1) return;
-
-      const endIndex = jsonData.findIndex((row) => row[0]?.trim() === "TOTAL");
-
-      const dataRows = jsonData.slice(headerIndex + 1, endIndex);
-
-      const formattedData: Ingredient[] = dataRows.map((row) => ({
-        name: row[0],
-        percentage: parseFloat(row[1]),
-        casNo: row[2],
-        reference: row[3],
-        function: row[4],
-        loading: true,
-      }));
-      setRawData(formattedData);
-    };
-    reader.readAsBinaryString(file);
-  };
+  const [searchBy, setSearchBy] = useState<"name" | "cas" | "all">("name");
+  const [rawData, setRawData] = useState<Ingredient[]>([]);
   const [refetch, setRefetch] = useState(false);
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => handleFileUpload(acceptedFiles[0]),
-    multiple: false,
-    accept: {
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
-        ".xlsx",
-      ],
-    },
-  });
+
   useEffect(() => {
     setIngredients(rawData);
     setRefetch(!refetch);
   }, [rawData, searchBy]);
+
   useEffect(() => {
     const updateIngredients = async () => {
       const promises = ingredients.map(async (ingredient, index) => {
@@ -111,13 +84,12 @@ const ExcelReader: React.FC = () => {
 
   return (
     <div>
-      <div
-        style={{ padding: "20px", border: "1px dashed #cccccc" }}
-        {...getRootProps()}
-      >
-        <input {...getInputProps()} />
-        <p>Kéo thả file .xlsx vào đây hoặc nhấp để chọn file</p>
-      </div>
+      {/* Modal for displaying data rows */}
+      <ExcelUploadComponent
+        selectedData={rawData}
+        setSelectedData={setRawData}
+      />
+
       <div
         style={{
           marginTop: "20px",
@@ -128,17 +100,7 @@ const ExcelReader: React.FC = () => {
           gap: "10px",
         }}
       >
-        Search by
-        <label>
-          <input
-            type="radio"
-            name="searchBy"
-            className="hidden"
-            checked={searchBy === "all"}
-            onChange={() => setSearchBy("all")}
-          />
-          All
-        </label>
+        Tìm kiếm theo
         <label>
           <input
             type="radio"
@@ -147,7 +109,7 @@ const ExcelReader: React.FC = () => {
             checked={searchBy === "name"}
             onChange={() => setSearchBy("name")}
           />
-          name
+          Tên
         </label>
         <label>
           <input
@@ -157,163 +119,71 @@ const ExcelReader: React.FC = () => {
             checked={searchBy === "cas"}
             onChange={() => setSearchBy("cas")}
           />
-          CAS
+          Mã CAS
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="searchBy"
+            className="hidden"
+            checked={searchBy === "all"}
+            onChange={() => setSearchBy("all")}
+          />
+          Cả hai
         </label>
       </div>
       <div>
         {ingredients.length > 0 && (
-          <table
-            style={{
-              border: "1px solid black",
-              width: "100%",
-              borderCollapse: "collapse",
-              marginTop: "20px",
-            }}
-          >
-            <thead>
-              <tr>
-                <th style={{ border: "1px solid black", padding: "8px" }}>
-                  Number
-                </th>
-                <th style={{ border: "1px solid black", padding: "8px" }}>
-                  Ingredient Name
-                </th>
-                <th style={{ border: "1px solid black", padding: "8px" }}>
-                  CAS No.
-                </th>
-                <th style={{ border: "1px solid black", padding: "8px" }}>
-                  Results
-                </th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Tên</TableCell>
+                <TableCell>Mã CAS</TableCell>
+                <TableCell>Kết quả</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {ingredients.map((ingredient, index) => (
-                <tr key={index}>
-                  <td
-                    style={{
-                      border: "1px solid black",
-                      padding: "8px",
-                      width: "50px",
-                    }}
-                  >
-                    {index + 1}
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid black",
-                      padding: "8px",
-                      width: "300px",
-                    }}
-                  >
-                    {ingredient.name}
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid black",
-                      padding: "8px",
-                      width: "150px",
-                    }}
-                  >
-                    {ingredient.casNo}
-                  </td>
-                  <td style={{ border: "1px solid black", padding: "8px" }}>
-                    <div
-                      style={{
-                        maxHeight: "300px",
-                        overflow: "auto",
-                      }}
-                    >
-                      {ingredient.loading ? (
-                        <div>Loading...</div>
-                      ) : ingredient.results?.length &&
-                        ingredient.results?.length > 0 ? (
-                        <table>
-                          <thead>
-                            <tr>
-                              <th
-                                style={{
-                                  border: "1px solid black",
-                                  padding: "8px",
-                                }}
-                              >
-                                Name
-                              </th>
-                              <th
-                                style={{
-                                  border: "1px solid black",
-                                  padding: "8px",
-                                }}
-                              >
-                                CAS
-                              </th>
-                              <th
-                                style={{
-                                  border: "1px solid black",
-                                  padding: "8px",
-                                }}
-                              >
-                                EC
-                              </th>
-                              <th
-                                style={{
-                                  border: "1px solid black",
-                                  padding: "8px",
-                                }}
-                              >
-                                Annex Ref
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {ingredient.results?.map(
-                              (result: Result, index: number) => (
-                                <tr key={index}>
-                                  <td
-                                    style={{
-                                      border: "1px solid black",
-                                      padding: "8px",
-                                    }}
-                                  >
-                                    {result.name}
-                                  </td>
-                                  <td
-                                    style={{
-                                      border: "1px solid black",
-                                      padding: "8px",
-                                    }}
-                                  >
-                                    {result.casNumber}
-                                  </td>
-                                  <td
-                                    style={{
-                                      border: "1px solid black",
-                                      padding: "8px",
-                                    }}
-                                  >
-                                    {result.ECNumber}
-                                  </td>
-                                  <td
-                                    style={{
-                                      border: "1px solid black",
-                                      padding: "8px",
-                                    }}
-                                  >
-                                    {result.AnnexRef}
-                                  </td>
-                                </tr>
-                              )
-                            )}
-                          </tbody>
-                        </table>
-                      ) : (
-                        <div>No Results</div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
+                <TableRow key={index}>
+                  <TableCell colSpan={1}>{ingredient.name}</TableCell>
+                  <TableCell colSpan={1}>{ingredient.casNo}</TableCell>
+                  <TableCell  colSpan={2}>
+                    {ingredient.loading ? (
+                            <LinearProgress />
+                    ) : ingredient.results?.length &&
+                      ingredient.results?.length > 0 ? (
+                      <Table sx={{ backgroundColor: "#f0f0f0" }}>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Tên</TableCell>
+                            <TableCell>Mã CAS</TableCell>
+                            <TableCell>Mã EC</TableCell>
+                            <TableCell>Annex Ref</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {ingredient.results?.map(
+                            (result: Result, index: number) => (
+                              <TableRow key={index}>
+                                <TableCell sx={{border: "1px solid #fff"}}>{result.name}</TableCell>
+                                <TableCell sx={{border: "1px solid #fff"}}>{result.casNumber}</TableCell>
+                                <TableCell sx={{border: "1px solid #fff"}}>{result.ECNumber}</TableCell>
+                                <TableCell sx={{border: "1px solid #fff"}}>{result.AnnexRef}</TableCell>
+                              </TableRow>
+                            )
+                          )}
+                        </TableBody>
+                      </Table>
+                    ) : (
+
+                      <div>Không có kết quả</div>
+                    )}
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
+       
         )}
       </div>
     </div>
