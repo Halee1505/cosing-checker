@@ -2,6 +2,7 @@
   "name": "ingredients-checker",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://Halee1505.github.io/cosing-checker",
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
@@ -29,7 +30,9 @@
     "electron-start": "wait-on http://localhost:3000 && electron .",
     "build": "react-scripts build && electron-builder",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "react-scripts build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -52,7 +55,8 @@
   "devDependencies": {
     "concurrently": "^9.0.1",
     "electron": "^32.1.2",
-    "electron-builder": "^25.0.5"
+    "electron-builder": "^25.0.5",
+    "gh-pages": "^6.1.1"
   },
   "build": {
     "appId": "com.example.myapp",
