@@ -36,3 +36,25 @@
     transform: rotate(360deg);
   }
 }
+
+.hidden{
+  display: none;
+}
+label{
+  width: 60px;
+  height: 40px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #fff;
+  color: #282c34;
+  box-shadow: #42485335 0px 0px 10px 1px;
+  font-weight: bolder;
+  transition: all 0.2s;
+}
+label:has(input:checked) {
+  background-color: #8edde0;
+  color: #fff;
+}

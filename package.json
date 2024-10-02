@@ -53,7 +53,7 @@
   },
   "build": {
     "appId": "com.example.myapp",
-    "productName": "MyElectronApp",
+    "productName": "Ingredients Checker",
     "files": [
       "build/**/*",
       "public/electron.js"

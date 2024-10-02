@@ -1,4 +1,3 @@
-// public/electron.js
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 
@@ -13,8 +12,12 @@ function createWindow() {
     }
   });
 
-  // Mở ứng dụng React đã được build
-  mainWindow.loadURL('http://localhost:3000');
+  // Sử dụng file tĩnh đã build thay vì chạy từ localhost
+  const startUrl = path.join(__dirname, '..', 'build', 'index.html');
+  mainWindow.loadFile(startUrl); // Thay thế dòng này với file build
+
+  // Tùy chọn mở Developer Tools nếu cần
+  // mainWindow.webContents.openDevTools();
 }
 
 app.on('ready', createWindow);
