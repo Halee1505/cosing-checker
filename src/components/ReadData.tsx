@@ -13,6 +13,7 @@ import {
   Checkbox,
   Button,
   LinearProgress,
+  TableContainer,
 } from "@mui/material";
 import ExcelUploadComponent from "./InputData";
 interface Ingredient {
@@ -145,37 +146,50 @@ const ExcelReader: React.FC = () => {
             <TableBody>
               {ingredients.map((ingredient, index) => (
                 <TableRow key={index}>
-                  <TableCell colSpan={1}>{ingredient.name}</TableCell>
-                  <TableCell colSpan={1}>{ingredient.casNo}</TableCell>
-                  <TableCell  colSpan={2}>
+                  <TableCell colSpan={1} sx={{ verticalAlign: "top" }}>
+                      {ingredient.name}
+                  </TableCell>
+                  <TableCell colSpan={1} sx={{ width: "100px", verticalAlign: "top" }}>
+                    {ingredient.casNo}
+                  </TableCell>
+                  <TableCell colSpan={2}>
                     {ingredient.loading ? (
-                            <LinearProgress />
+                      <LinearProgress />
                     ) : ingredient.results?.length &&
                       ingredient.results?.length > 0 ? (
-                      <Table sx={{ backgroundColor: "#f0f0f0" }}>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Tên</TableCell>
-                            <TableCell>Mã CAS</TableCell>
-                            <TableCell>Mã EC</TableCell>
-                            <TableCell>Annex Ref</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {ingredient.results?.map(
-                            (result: Result, index: number) => (
-                              <TableRow key={index}>
-                                <TableCell sx={{border: "1px solid #fff"}}>{result.name}</TableCell>
-                                <TableCell sx={{border: "1px solid #fff"}}>{result.casNumber}</TableCell>
-                                <TableCell sx={{border: "1px solid #fff"}}>{result.ECNumber}</TableCell>
-                                <TableCell sx={{border: "1px solid #fff"}}>{result.AnnexRef}</TableCell>
-                              </TableRow>
-                            )
-                          )}
-                        </TableBody>
-                      </Table>
+                      <TableContainer sx={{ maxHeight: 440 }}>
+                        <Table sx={{ backgroundColor: "#f0f0f0" }} stickyHeader>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Tên</TableCell>
+                              <TableCell>Mã CAS</TableCell>
+                              <TableCell>Mã EC</TableCell>
+                              <TableCell>Annex Ref</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {ingredient.results?.map(
+                              (result: Result, index: number) => (
+                                <TableRow key={index}>
+                                  <TableCell sx={{ border: "1px solid #fff" }}>
+                                    {result.name}
+                                  </TableCell>
+                                  <TableCell sx={{ border: "1px solid #fff", width: "100px"}}>
+                                    {result.casNumber}
+                                  </TableCell>
+                                  <TableCell sx={{ border: "1px solid #fff", width: "100px" }}>
+                                    {result.ECNumber}
+                                  </TableCell>
+                                  <TableCell sx={{ border: "1px solid #fff" }}>
+                                    {result.AnnexRef}
+                                  </TableCell>
+                                </TableRow>
+                              )
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
                     ) : (
-
                       <div>Không có kết quả</div>
                     )}
                   </TableCell>
@@ -183,7 +197,6 @@ const ExcelReader: React.FC = () => {
               ))}
             </TableBody>
           </Table>
-       
         )}
       </div>
     </div>
