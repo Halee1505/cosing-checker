@@ -2,7 +2,7 @@
   "name": "ingredients-checker",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://Halee1505.github.io/cosing-checker",
+  "homepage": "https://Halee1505.github.io/cosing-checker/#",
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
@@ -15,9 +15,12 @@
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "file-system": "^2.2.2",
+    "firebase": "^10.14.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",
+    "react-firebase-hooks": "^5.1.1",
+    "react-router-dom": "^6.26.2",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
@@ -32,7 +35,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "react-scripts build",
-    "deploy": "gh-pages -d build"
+    "deploy": "react-scripts build && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
