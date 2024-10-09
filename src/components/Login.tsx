@@ -50,6 +50,12 @@ const LoginPage = () => {
             value={password}
             onChange={(e) => (setPassword(e.target.value), setMessage(""))}
           />
+          <span className="forgot-password">
+            <p onClick={() => navigate("/forgot-password")}>
+              Quên mật khẩu ?
+            </p>
+          </span>
+
           <div className="message">{message}</div>
           <button className="login-button" type="submit" disabled={loading}>
             Đăng nhập

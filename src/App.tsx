@@ -6,6 +6,8 @@ import ProtectedRoute from "./components/ProtectedRoutes";
 import ExcelReader from "./components/ReadData";
 import ResetPasswordPage from "./components/ResetPassword";
 import HomePage from "./components/Home";
+import Register from "./components/Register";
+import ForgotPasswordPage from "./components/Forgot";
 
 function App() {
 
@@ -14,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         {/* <Route path="/register" element={<Register />} /> */}
         <Route
           path="/reset"

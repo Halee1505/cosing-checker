@@ -60,7 +60,7 @@ label:has(input:checked) {
 }
 
 /* From Uiverse.io by Smit-Prajapati */ 
-.login-main{
+.login-main, .forgot-password-main{
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -70,7 +70,7 @@ label:has(input:checked) {
 
 }
 .container {
-  max-width: 350px;
+  width: max-content;
   background: #F8F9FD;
   background: linear-gradient(0deg, rgb(255, 255, 255) 0%, rgb(244, 247, 251) 100%);
   border-radius: 40px;
@@ -125,9 +125,10 @@ label:has(input:checked) {
   justify-content: flex-start;
 }
 
-.form .forgot-password a, .message {
+.form .forgot-password p, .message {
   font-size: 11px;
   color: #0099ff;
+  cursor: pointer;
   text-decoration: none;
 }
 .message{
@@ -135,9 +136,11 @@ label:has(input:checked) {
 }
 .form .login-button {
   display: flex;
+  white-space: nowrap;
   justify-content: center;
   align-items: center;
   gap: 10px;
+  padding: 10px 20px;
   cursor: pointer;
   width: 100%;
   font-weight: bold;
@@ -149,6 +152,25 @@ label:has(input:checked) {
   box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 20px 10px -15px;
   border: none;
   transition: all 0.2s ease-in-out;
+}
+
+.form .btn-secondary {
+  background: linear-gradient(45deg, rgb(255, 255, 255) 0%, rgb(246, 246, 246) 100%);
+  color: rgb(16, 137, 211);
+}
+
+.form .btn-secondary:hover {
+  background: linear-gradient(45deg, rgb(16, 137, 211) 0%, rgb(18, 177, 209) 100%);
+  color: white;
+}
+.btn-group{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: bold;
 }
 
 .form .login-button:hover {
